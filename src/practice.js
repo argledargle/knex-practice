@@ -7,6 +7,8 @@ const knexInstance = knex({
 
 console.log("Connection successful.");
 
+console.log("process.env.DB_URL:", process.env.DB_URL);
+
 const q1 = knexInstance("amazong_products")
   .select("*")
   .toQuery();
