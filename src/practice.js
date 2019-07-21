@@ -1,4 +1,5 @@
 const knex = require("knex");
+require("dotenv").config();
 
 const knexInstance = knex({
   client: "pg",
@@ -7,24 +8,39 @@ const knexInstance = knex({
 
 console.log("Connection successful.");
 
-console.log("process.env.DB_URL:", process.env.DB_URL);
 
-const q1 = knexInstance("amazong_products")
-  .select("*")
-  .toQuery();
-const q2 = knexInstance
-  .from("amazong_products")
-  .select("*")
-  .toQuery();
+function searchByProductName(searchTerm) {
+knexInstance
+.select('product_id', 'name', 'price', 'category')
+.from('amazong_products')
+.where('name', 'ILIKE', `%${searchTerm}%`)
+.then(result => {
+  console.log(result)
+})
+}
 
-console.log("q1:", q1);
+searchByProductName('holo')
 
-console.log("q2:", q2);
+function paginateProducts(page) {
+    const productsPerPage = 10
+    const offset = productsPerPage * ( page - 1)
+    knexInstance
+    .select('product_id', 'name', 'price', 'category')
+    .from('amazong_products')
+    .limit(productsPerPage)
+    .offset(offset)
+    .then(result => {console.log(result)})
+}
 
-const q3 =knexInstance("amazong_products")
-  .select('*')
+paginateProducts(2)
+
+function getProductsWithImages() {
+  knexInstance.select('product_id', 'name', 'price', 'category')
+  .from('amazong_products')
+  .whereNotNull('image')
   .then(result => {
-    console.log(result);
-  });
+    console.log(result)
+  })
+}
 
-console.log("q3:", q3);
+getProductsWithImages();
