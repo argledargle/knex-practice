@@ -1,6 +1,6 @@
 require('dotenv').config();
 const knex = require('knex');
-const ArticleServices = require('./articles-service')
+const ArticlesService = require('./articles-service')
 
 const knexInstance = knex({
     client: 'pg',
