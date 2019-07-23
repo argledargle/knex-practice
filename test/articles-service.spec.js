@@ -1,4 +1,4 @@
-const ArticlesServie = require("../src/articles-service");
+const ArticlesService = require("../src/articles-service");
 const knex = require("knex");
 
 describe(`Articles service object`, function() {
@@ -28,9 +28,18 @@ describe(`Articles service object`, function() {
     });
   });
 
+  before(() => {
+    return db.into("blogful_articles").insert(testArticles);
+  });
+
+  after(() => db.destroy())
+  
+
   describe(`getAllArticles()`, () => {
     it(`resolves all articles from 'blogful_articles' table`, () => {
-      //test that ArticlesService.getAllArticles gets data from the table
+      return ArticlesService.getAllArticles(db).then(actual => {
+        expect(actual).to.eql(testArticles);
+      });
     });
   });
 });
